@@ -29,6 +29,7 @@ SECRET_KEY = 'secret'
 # You do not have to configure the other data backends. If unsure, choose
 # 'datastore' as it does not require any additional configuration.
 DATA_BACKEND = 'datastore'
+CLOUD_STORAGE_BUCKET = 'bookshelf-171322' #not the default same name as the project, I just used it to be unique as suggested in the tutorial
 
 # Google Cloud Project ID. This can be found on the 'Overview' page at
 # https://console.developers.google.com
