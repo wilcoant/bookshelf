@@ -18,6 +18,26 @@ from flask import Blueprint, redirect, render_template, request, url_for
 
 crud = Blueprint('crud', __name__)
 
+# [START upload_image_file]
+def upload_image_file(file):
+    """
+    Upload the user-uploaded file to Google Cloud Storage and retrieve its
+    publicly-accessible URL.
+    """
+    if not file:
+        return None
+
+    public_url = storage.upload_file(
+        file.read(),
+        file.filename,
+        file.content_type
+    )
+
+    current_app.logger.info(
+        "Uploaded file %s as %s.", file.filename, public_url)
+
+    return public_url
+# [END upload_image_file]
 
 # [START list]
 @crud.route("/")
@@ -46,6 +66,16 @@ def view(id):
 def add():
     if request.method == 'POST':
         data = request.form.to_dict(flat=True)
+        
+        # If an image was uploaded, update the data to point to the new image.
+        # [START image_url]
+        image_url = upload_image_file(request.files.get('image'))
+        # [END image_url]
+
+        # [START image_url2]
+        if image_url:
+            data['imageUrl'] = image_url
+        # [END image_url2]
 
         book = get_model().create(data)
 
